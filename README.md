@@ -9,8 +9,9 @@ You can [access the tutorial here](https://freshman.tech/learn-node).
 [Live demo](https://freshman-node.herokuapp.com/)
 
 ## Instructions
-1. Clone repo
-2. Run `npm install`
+1. create a folder named test1
+2. git init (in test1)
+3. git pull https://github.com/duphan2014/test1 master
 
 ## Getting Help
 
