@@ -1,0 +1,52 @@
+doctype html
+html
+  head
+    //title #{title}
+    link(rel='stylesheet', href='/css/style.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous")
+    script(src='/javascripts/app.js')
+    script.
+      function onButtonClick(){
+        console.log('button clicked');
+      }
+  style(type='text/css').
+    #myProgress {
+    width: 75%;
+    background-color: #ddd;
+    }
+
+    #myBar {
+    width: 1%;
+    height: 30px;
+    background-color: #4CAF50;
+    }
+
+
+    #run {
+      /*display: block;*/
+      width: 120px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      padding: 14px 28px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    #run:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    #runningIcon{
+      width: auto;
+      height: 30px;
+    }
+  body
+    main
+      block header
+        header.header
+          //h1 #{title}
+      block content

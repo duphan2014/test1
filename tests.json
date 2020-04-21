@@ -1,0 +1,80 @@
+{
+  "tests": [
+    {
+      "id": "test1",
+      "name": "Data Runs Deep - Menu",
+      "author": "Daniel Phan",
+      "steps": [
+      	{
+          "index" : "1",
+      		"action" : "goto",
+      		"selector" : "https://www.datarunsdeep.com.au",
+          "validation" : []
+      	},
+      	{
+          "index" : "2",
+      		"action" : "click",
+      		"selector" : ".primary-menu__trigger",
+          "validations" : [
+            {
+              "tag" : "UA",
+              "type" : "exact",
+              "validators" :
+              {
+                "tid" : "UA-37174842",
+                "t" : "event",
+                "ec" : "Navigation",
+                "ea" : "Menu",
+                "el" : "State"
+              }
+            },
+            {
+              "tag" : "UA",
+              "type" : "regex",
+              "validators" :
+              {
+                "tid" : "UA-37174842",
+                "t" : "event",
+                "ec" : ".*",
+                "ea" : ".*",
+                "el" : ".*"
+              }
+            }
+          ]
+      	},
+        {
+          "index" : "3",
+          "action" : "click",
+          "selector" : ".primary-menu__close"
+        },
+        {
+          "index" : "4",
+          "action" : "end",
+          "selector" : "none"
+        }
+      ]
+    },
+    {
+      "id": "test2",
+      "name": "Test 2",
+      "author": "Max",
+      "steps": [
+      	{
+          "index" : "1",
+      		"action" : "goto",
+      		"selector" : "www.datarunsdeep.com.au/contact"
+      	},
+      	{
+          "index" : "2",
+      		"action" : "click",
+      		"selector" : "#cssselector"
+      	},
+        {
+          "index" : "3",
+          "action" : "end",
+          "selector" : ""
+        }
+      ]
+    }
+  ]
+}

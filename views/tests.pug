@@ -1,0 +1,51 @@
+extends default
+
+block header
+  //overwriting the template defaul header block with an empty block
+
+block content
+  script(src='/socket.io/socket.io.js')
+  script(src='/javascripts/renderjson.js')
+  script.
+    var socket = io();
+    socket.on('updateCurrentStepName', function(data){
+      console.log(data.currentStep);
+      document.getElementById('run').textContent = "Running";
+      document.getElementById('currentStep').innerHTML = "... " + data.index + ". " +  data.currentStep;
+      document.getElementsByClassName("step")[parseInt(data.index)-1].style.color="#8BC34A";
+
+      var progressBar = document.getElementById("myBar");
+      progressBar.style.width = (100 * parseInt(data.index) / data.numSteps) + "%";
+    });
+    socket.on('finishTest', function(result){
+      document.getElementById('currentStep').innerHTML = "Success";
+      document.getElementById('run').textContent = "Run";
+      document.getElementById("runningIcon").style.visibility="hidden";
+
+      // display result
+      document.getElementById("test-result").appendChild(
+        renderjson(result)
+      );
+    })
+  div.test
+    div.test-details
+      h2.test-name
+        | Test - #{test.name}
+      h4.test-author
+        | Author - #{test.author}
+      div.control
+        span
+          button#run(onclick = 'runTest()') Run
+        img#runningIcon(src="/images/pickaxe_working.gif" style="visibility:hidden")
+        span#currentStep(style="padding-left: 0px;color: #8BC34A;font-size:16px")
+      div#myProgress(style="margin-top: 10px;")
+          div#myBar
+      div.test-step
+        h2 Steps
+        ol.steps
+          each step in test.steps
+            li.step
+              | #{step.action} : #{step.selector}
+      div#test-result
+        h2 Raw Result
+        
