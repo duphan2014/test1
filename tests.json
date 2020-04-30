@@ -9,7 +9,7 @@
           "index" : "1",
       		"action" : "goto",
       		"selector" : "https://www.datarunsdeep.com.au",
-          "validation" : []
+          "validations" : []
       	},
       	{
           "index" : "2",
@@ -20,25 +20,23 @@
               "tag" : "UA",
               "type" : "exact",
               "validators" :
-              {
-                "tid" : "UA-37174842",
-                "t" : "event",
-                "ec" : "Navigation",
-                "ea" : "Menu",
-                "el" : "State"
-              }
+              [
+                "www.google-analytics.com",
+                "tid=UA-37174842",
+                "t=event",
+                "ec=Navigation",
+                "ea=Menu",
+                "el=State"
+              ]
             },
             {
-              "tag" : "UA",
+              "tag" : "facebook",
               "type" : "regex",
               "validators" :
-              {
-                "tid" : "UA-37174842",
-                "t" : "event",
-                "ec" : ".*",
-                "ea" : ".*",
-                "el" : ".*"
-              }
+              [
+                "www.facebook.com",
+                "id=123456789"
+              ]
             }
           ]
       	},

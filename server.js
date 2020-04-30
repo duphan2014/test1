@@ -59,6 +59,7 @@ app.post('/runTest', function(req, res){
 	var socket = socket;
 	console.log(steps);
 
+
 	(async () => {
 		const browser = await puppeteer.launch();
 		const page = await browser.newPage();
@@ -81,28 +82,59 @@ app.post('/runTest', function(req, res){
 			  resolveWithFullResponse: true,
 			}).then(response => {
 			  const request_url = request.url();
-			  result.stepResults[currentStepIndex].requests.push({"requestUrl" : request_url});
 
+
+			  var validations = steps[currentStepIndex].validations;
+			  var validationResults = [];
+			  for(var i in validations){
+			  	var validators = validations[i].validators;
+			  	var validationResult = {"tag":validations[i].tag, data:[]};
+		  		for(var j in validators){
+		  			var validator = validators[j];
+		  			var a ={};
+		  			if(request_url.match(validator)){
+		  				a[validator]= "pass";
+		  			}else{
+		  				a[validator]= "failed";
+		  			}
+		  			validationResult.data.push(a);
+		  		}
+		  		validationResults.push(validationResult);
+			  }
+
+			  // determine if the validation fail or pass in general (if there exists a validationResult with all validationResult.data = pass then step = pass)
+			  // for(var i in validationResults){
+			  // 	var result = validationResults[i];
+			  // 	for(var j in result.data){
+			  // 		result.data[j].
+			  // 	}
+			  // }
 			  /*
-			  if(request_url.match(/google-analytics.com/i)){
-			    var tid = request_url.match(/tid=([^&]*)/)?request_url.match(/tid=([^&]*)/)[0]:'tid=undefined';
-			    var ec = request_url.match(/ec=([^&]*)/)?request_url.match(/ec=([^&]*)/)[0]:'ec=undefined';
-			    var ea = request_url.match(/ea=([^&]*)/)?request_url.match(/ea=([^&]*)/)[0]:'ea=undefined';
-			    var el = request_url.match(/el=([^&]*)/)?request_url.match(/el=([^&]*)/)[0]:'el=undefined';
+			  {
+			  	"requestUrl" : "http://google-analytics.com/p=ecadfa&ea=afad",
+			  	"validationResults" : [
+			  		{
+			  			"tag" : "UA",
+			  			"data" : [
+			  				{"tid=UA-37174842" : "pass"},
+			  				{"t=event" : "pass"},
+			  				{"ec=Navigation" : "pass"},
+			  				{"ea=Menu" : "pass"},
+			  				{"el=State" : "pass"}
+			  			]
+			  		},
+			  		{
+			  			"tag" : "Facebook",
+			  			"data" : [
+			  				{"id=844585682227065" : "failed"}
+			  			]
+			  		},
+			  	]
+			  }
+			  */
 
-			    fs.appendFile("./network_requests_output.txt", 
-			      '============================================ \n\r' +
-			      request_url + '\n\r' + 
-			      tid + '\n\r' + 
-			      ec + '\n\r' + 
-			      ea + '\n\r' + 
-			      el + '\n\r', 
-			      'utf8', function(err) {
-			      if(err) {
-			          return console.log(err);
-			      }
-			    });
-			  }*/
+			  result.stepResults[currentStepIndex].requests.push({"requestUrl" : request_url, "validationResults" : validationResults});
+
 			  request.continue();
 			}).catch(error => {
 			  request.abort();
