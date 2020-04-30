@@ -99,16 +99,23 @@ app.post('/runTest', function(req, res){
 		  			}
 		  			validationResult.data.push(a);
 		  		}
-		  		validationResults.push(validationResult);
+
+
+		  		var overallResult = "pass";
+			  	for(var j in validationResult.data){
+			  		var p = validationResult.data[j];
+				  	for (var key in p) {
+				    	if (p.hasOwnProperty(key)) {
+				        	if(p[key] == "failed"){
+				        		overallResult = "failed";
+				        	}
+				    	}
+				  	}
+			  	}
+
+		  		validationResults.push({"status" : overallResult, "data" : validationResult});
 			  }
 
-			  // determine if the validation fail or pass in general (if there exists a validationResult with all validationResult.data = pass then step = pass)
-			  // for(var i in validationResults){
-			  // 	var result = validationResults[i];
-			  // 	for(var j in result.data){
-			  // 		result.data[j].
-			  // 	}
-			  // }
 			  /*
 			  {
 			  	"requestUrl" : "http://google-analytics.com/p=ecadfa&ea=afad",
