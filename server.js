@@ -115,7 +115,7 @@ app.post('/runTest', function(req, res){
 
 		  		validationResults.push({"status" : overallValidationResult, "data" : validationResult});
 			  }
-			  
+
 			  /*
 			  {
 			  	"requestUrl" : "http://google-analytics.com/p=ecadfa&ea=afad",
@@ -195,7 +195,7 @@ app.post('/runTest', function(req, res){
 				//write to JSON file
 				var jsonContent = JSON.stringify(result);
 				console.log(jsonContent);
-				var testResultFileName = "testResult_raw_" + test.id + "_" + Date.now();
+				var testResultFileName = "test_results/testResult_raw_" + test.id + "_" + Date.now();
 				fs.writeFile(testResultFileName, jsonContent, 'utf8', function (err) {
 				    if (err) {
 				        console.log("An error occured while writing JSON Object to File.");
