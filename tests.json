@@ -3,7 +3,7 @@
     {
       "id": "test1",
       "name": "Data Runs Deep - Menu",
-      "author": "Daniel Phan",
+      "author": "abc",
       "steps": [
       	{
           "index" : "1",
@@ -55,7 +55,7 @@
     {
       "id": "test2",
       "name": "Test 2",
-      "author": "Max",
+      "author": "abc",
       "steps": [
       	{
           "index" : "1",

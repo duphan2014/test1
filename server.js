@@ -83,7 +83,7 @@ app.post('/runTest', function(req, res){
 			}).then(response => {
 			  const request_url = request.url();
 
-
+			  var overallValidationResult = "pass";
 			  var validations = steps[currentStepIndex].validations;
 			  var validationResults = [];
 			  for(var i in validations){
@@ -101,21 +101,21 @@ app.post('/runTest', function(req, res){
 		  		}
 
 
-		  		var overallResult = "pass";
+		  		overallValidationResult = "pass";
 			  	for(var j in validationResult.data){
 			  		var p = validationResult.data[j];
 				  	for (var key in p) {
 				    	if (p.hasOwnProperty(key)) {
 				        	if(p[key] == "failed"){
-				        		overallResult = "failed";
+				        		overallValidationResult = "failed";
 				        	}
 				    	}
 				  	}
 			  	}
 
-		  		validationResults.push({"status" : overallResult, "data" : validationResult});
+		  		validationResults.push({"status" : overallValidationResult, "data" : validationResult});
 			  }
-
+			  
 			  /*
 			  {
 			  	"requestUrl" : "http://google-analytics.com/p=ecadfa&ea=afad",
@@ -139,7 +139,11 @@ app.post('/runTest', function(req, res){
 			  	]
 			  }
 			  */
-
+				if(overallValidationResult == "failed"){
+				  result.stepResults[currentStepIndex].status = "failed"; //can be step error, pass, failed
+				}else if(overallValidationResult == "pass"){
+				  result.stepResults[currentStepIndex].status = "pass";
+				}
 			  result.stepResults[currentStepIndex].requests.push({"requestUrl" : request_url, "validationResults" : validationResults});
 
 			  request.continue();

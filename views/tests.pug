@@ -23,15 +23,40 @@ block content
       document.getElementById("runningIcon").style.visibility="hidden";
 
       // display result
-      document.getElementById("test-result").appendChild(
+      document.getElementById("test-result-json").innerHTML="<h5>Result: JSON</h5>";
+      document.getElementById("test-result-json").appendChild(
         renderjson(result)
       );
+
+        /*
+      var htmlString='<div class="list-group"> <a href="#" class="list-group-item active"> <h4 class="list-group-item-heading"><span class="action">Click</span><span class="selector">.primary-menu__trigger</span><span>Pass<span></h4> <p class="list-group-item-text"><span class="request_url">http://www.google-analytics.com/collect?v=1&_v=j81&a=1867141466&t=event</span></p> <div> <div> <span>Validation 1</span><span> pass</span> </div> <div style="padding-left:30px"> <div><span>validator 1</span><span>pass</span></div> <div><span>validator 2</span><span>pass</span></div> </div> </div> <div> <div> <span>Validation 2</span><span> pass</span> </div> <div style="padding-left:30px"> <div><span>validator 1</span><span>failed</span></div> <div><span>validator 2</span><span>failed</span></div> </div> </div> </a> <a href="#" class="list-group-item"> <h4 class="list-group-item-heading">Second List Group Item Heading</h4> <p class="list-group-item-text">List Group Item Text</p> </a> <a href="#" class="list-group-item"> <h4 class="list-group-item-heading">Third List Group Item Heading</h4> <p class="list-group-item-text">List Group Item Text</p> </a> </div>';
+      */
+
+      var a="<div><h5>Result: Details</h5></div>";
+      a += "<div class='list-group'>";
+      for(var i in result.stepResults){
+        var stepResult= result.stepResults[i];
+        a = a + "<div class='list-group-item'>";
+        a = a+"<h4 class='list-group-item-heading' onclick='toggleValidationDataVisibility(this)'><span class='visibility-icon' style='padding-right:10px;'>+</span><span class='step-status' style='width:80px;display:inline-block;font-weight: bold'>" + stepResult.status + "</span><span  style='padding-left:20px' class='step-action'>" + stepResult.action + "</span>" + "<span class='step-selector' style='padding-left:20px'>" + stepResult.selector + "</span></h4>";
+        a += "<div class='validation-data' style='display:none'>";
+        for(var j in stepResult.requests){
+            var request = stepResult.requests[j];
+            a = a + "<p stype='width=100%' class='list-group-item-text'><input readonly style=' width: 100%; padding: 5px; margin: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -o-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; ' class='request_url' type='text' value='" + request.requestUrl + "'></input></p>";
+        }
+        a+="</div>";
+        a = a + "</div>";
+      }
+      a = a+ "</div>"; // closing "<div class='list-group'>";
+
+
+      var div = document.getElementById('test-result-formatted');
+      div.innerHTML = a.trim();
     })
-  div.test
+  div.test(style="padding-left:100px;padding-right:100px")
     div.test-details
       h2.test-name
         | Test - #{test.name}
-      h4.test-author
+      h5.test-author
         | Author - #{test.author}
       div.control
         span
@@ -41,11 +66,11 @@ block content
       div#myProgress(style="margin-top: 10px;")
           div#myBar
       div.test-step
-        h2 Steps
-        ol.steps
+        h5 Steps
+        ol(class="list-group steps")
           each step in test.steps
-            li.step
+            li(class="list-group-item list-group-item-info step")
               | #{step.action} : #{step.selector}
-      div#test-result
-        h2 Raw Result
+      div#test-result-json
+      div#test-result-formatted
         
