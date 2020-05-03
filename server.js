@@ -126,20 +126,13 @@ app.post('/runTest', function(req, res){
 
 				// *** setting request.status ***
 				// request.status == pass if there is one validationResult.status = pass
-				//if(validationResult_status == "pass"){
-				//	request_status = "pass";
-				//}
-
 				var request_status = "pass";
 				for(var i in validationResults){
 					if(validationResults[i].status == "failed"){
 						request_status = "failed";
 					}
 				}
-				//if(validationResults.length == 0){
-				//	request_status = "pass";
-				//}
-
+				
 			  	result.stepResults[currentStepIndex].requests.push({"requestUrl" : request_url, "status" : request_status, "validationResults" : validationResults});
 			  		// *** END ***
 
