@@ -31,7 +31,7 @@
             },
             {
               "tag" : "facebook",
-              "type" : "exact",
+              "type" : "regex",
               "validators" :
               [
                 "www.facebook.com",

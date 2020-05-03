@@ -52,7 +52,7 @@ app.post('/runTest', function(req, res){
 	res.render('tests', {
 		title: `Test: ${test.name} by ${test.author}`,
 		test,
-		step: 'fuck you'
+		step: 'bla'
 	})
 
 	var steps = test.steps;
@@ -81,72 +81,69 @@ app.post('/runTest', function(req, res){
 			  uri: request.url(),
 			  resolveWithFullResponse: true,
 			}).then(response => {
-			  const request_url = request.url();
-
-			  var overallValidationResult = "pass";
-			  var validations = steps[currentStepIndex].validations;
-			  var validationResults = [];
-			  for(var i in validations){
-			  	var validators = validations[i].validators;
-			  	var validationResult = {"tag":validations[i].tag, data:[]};
-		  		for(var j in validators){
-		  			var validator = validators[j];
-		  			var a ={};
-		  			if(request_url.match(validator)){
-		  				a[validator]= "pass";
-		  			}else{
-		  				a[validator]= "failed";
-		  			}
-		  			validationResult.data.push(a);
-		  		}
+				const request_url = request.url();
 
 
-		  		overallValidationResult = "pass";
-			  	for(var j in validationResult.data){
-			  		var p = validationResult.data[j];
-				  	for (var key in p) {
-				    	if (p.hasOwnProperty(key)) {
-				        	if(p[key] == "failed"){
-				        		overallValidationResult = "failed";
-				        	}
-				    	}
-				  	}
-			  	}
+				//var request_status = "failed";
 
-		  		validationResults.push({"status" : overallValidationResult, "data" : validationResult});
-			  }
+				result.stepResults[currentStepIndex].status = "pass";
 
-			  /*
-			  {
-			  	"requestUrl" : "http://google-analytics.com/p=ecadfa&ea=afad",
-			  	"validationResults" : [
-			  		{
-			  			"tag" : "UA",
-			  			"data" : [
-			  				{"tid=UA-37174842" : "pass"},
-			  				{"t=event" : "pass"},
-			  				{"ec=Navigation" : "pass"},
-			  				{"ea=Menu" : "pass"},
-			  				{"el=State" : "pass"}
-			  			]
-			  		},
-			  		{
-			  			"tag" : "Facebook",
-			  			"data" : [
-			  				{"id=844585682227065" : "failed"}
-			  			]
-			  		},
-			  	]
-			  }
-			  */
-				if(overallValidationResult == "failed"){
-				  result.stepResults[currentStepIndex].status = "failed"; //can be step error, pass, failed
-				}else if(overallValidationResult == "pass"){
-				  result.stepResults[currentStepIndex].status = "pass";
+				var validations = steps[currentStepIndex].validations;
+				var validationResults = [];
+				for(var i in validations){
+					var validators = validations[i].validators;
+					var validationResult = {"tag":validations[i].tag, data:[]};
+					for(var j in validators){
+						var validator = validators[j];
+						var a ={};
+						if(request_url.match(validator)){
+							a[validator]= "pass";
+						}else{
+							a[validator]= "failed";
+						}
+						validationResult.data.push(a);
+					}
+
+
+					// *** setting validationResult[i].status ***
+					// validationResults[i]: individual validationResult
+					var validationResult_status = "pass";
+					// validationResult.status == failed if there is one validationResult.data.data[{"adfa":"failed"}]
+					for(var j in validationResult.data){
+						var p = validationResult.data[j];
+				  		for (var key in p) {
+				    		if (p.hasOwnProperty(key)) {
+				        		if(p[key] == "failed"){
+				        			validationResult_status = "failed";
+				        		}
+				    		}
+				  		}
+					}
+					//validationResults[i] status
+					validationResults.push({"status" : validationResult_status, "data" : validationResult});
+					// *** END ***
 				}
-			  result.stepResults[currentStepIndex].requests.push({"requestUrl" : request_url, "validationResults" : validationResults});
 
-			  request.continue();
+				// *** setting request.status ***
+				// request.status == pass if there is one validationResult.status = pass
+				//if(validationResult_status == "pass"){
+				//	request_status = "pass";
+				//}
+
+				var request_status = "pass";
+				for(var i in validationResults){
+					if(validationResults[i].status == "failed"){
+						request_status = "failed";
+					}
+				}
+				//if(validationResults.length == 0){
+				//	request_status = "pass";
+				//}
+
+			  	result.stepResults[currentStepIndex].requests.push({"requestUrl" : request_url, "status" : request_status, "validationResults" : validationResults});
+			  		// *** END ***
+
+			  	request.continue();
 			}).catch(error => {
 			  request.abort();
 			});
@@ -189,6 +186,8 @@ app.post('/runTest', function(req, res){
 				  	"requests":[]
 				});
 				console.log('Test finished');
+
+
 				console.log(result);
 				console.log(result.stepResults);
 
@@ -210,6 +209,16 @@ app.post('/runTest', function(req, res){
 				socketG.emit('finishTest', result);
 			}
 
+	  		// *** setting stepResults[i].status
+	  		// if one request.status = failed then stepResults[i].status = failed (default = pass)
+	  		result.stepResults[i].status = "pass";
+	  		for(var j in result.stepResults[i].requests){
+	  			var request = result.stepResults[i].requests[j];
+	  			if(request.status == "failed"){
+	  				result.stepResults[i].status = "failed";
+	  			}
+	  		}
+			// *** END ***
 		}
 
 		await browser.close();
