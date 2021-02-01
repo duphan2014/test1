@@ -17,12 +17,11 @@ You can [access the tutorial here](https://freshman.tech/learn-node).
 
 ## Git Instructions:
 1. to add new changes to master
-		git add *
-		git commit -m "commit message"
-		git push origin master
-2. If you have not cloned an existing repository and want to connect your repository to a remote server, you need to add it with
-		git remote add origin <server>
-3. if there new changes in repository, do git pull to fetch those first
+git add *
+git commit -m "commit message"
+git push origin master
+2. If you have not cloned an existing repository and want to connect your repository to a remote server, you need to add it with "git remote add origin <server>""
+3. if there new changes in repository, do "git pull origin master" to fetch those first
 		more instructions can be found here https://rogerdudler.github.io/git-guide/
 
 ## Getting Help
