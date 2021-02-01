@@ -76,6 +76,15 @@ app.post('/runTest', function(req, res){
 			"stepResults": []
 		}
 
+		browser.on('targetcreated', async (target) => { //This block intercepts all new events
+		  if (target.type() === 'page') {               // if it tab/page
+		         const page = await target.page();      // declare it
+		         const url = page.url();                // example, look at her url
+		         console.log('***** ' + url);
+		  }
+		});
+
+
 		page.on('request', request => {
 			request_client({
 			  uri: request.url(),
@@ -142,7 +151,8 @@ app.post('/runTest', function(req, res){
 			});
 		});
 		
-
+		// get all the currently open pages as an array
+		let pages = await browser.pages();
 		for(var i in steps){
 			var step = steps[i];
 			console.log('running step:');
@@ -150,6 +160,8 @@ app.post('/runTest', function(req, res){
 			currentStepIndex = i;
 			socketG.emit('updateCurrentStepName', { numSteps: steps.length, index: step.index, currentStep: step.action + ": " + step.selector});
 			if(step.action == 'goto'){
+				//console.log('+++++ ' + page.url());
+				console.log("number of browser pages: " + pages.length);
 				result.stepResults.push({
 				  	"index": step.index,
 				  	"action": step.action,
@@ -160,6 +172,8 @@ app.post('/runTest', function(req, res){
 					waitUntil: 'networkidle0',
 				});
 			}else if(step.action == 'click'){
+				console.log("number of browser pages: " + pages.length);
+				//console.log('+++++ ' + page.url());
 				result.stepResults.push({
 				  	"index": step.index,
 				  	"action": step.action,
@@ -171,6 +185,30 @@ app.post('/runTest', function(req, res){
 					console.error(error);
 				});
 				await page.waitFor(3000);
+
+				
+				
+				console.log("number of browser pages: " + pages.length);
+				console.log(pages[0].url());
+				console.log(pages[1].url());
+				if(pages.length>2){
+					console.log(pages[2].url());
+					await pages[2].bringToFront();
+				}
+			}else if(step.action == 'edit'){
+				result.stepResults.push({
+				  	"index": step.index,
+				  	"action": step.action,
+				  	"selector": step.selector,
+				  	"requests":[]
+				});
+				var URL = step.text;
+				await page.waitForSelector(step.selector);
+				await page.$eval(step.selector, (el, url) => el.value = url, URL).catch(error => {
+					console.error(error);
+				});
+				await page.waitFor(3000);
+				console.log("number of browser pages: " + pages.length);
 			}else if(step.action == 'end'){
 				result.stepResults.push({
 				  	"index": step.index,

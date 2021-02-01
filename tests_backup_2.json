@@ -8,26 +8,47 @@
       	{
           "index" : "1",
       		"action" : "goto",
-      		"selector" : "https://tagassistant.google.com/#!#source=TAG_MANAGER&id=GTM-N4D7KW&gtm_auth=kALKj04OP-SpPs2dMA70Tw&gtm_preview=env-562&cb=428326580326923",
+      		"selector" : "https://www.datarunsdeep.com.au",
           "validations" : []
       	},
       	{
           "index" : "2",
-      		"action" : "edit",
-      		"selector" : "#domain-start-url",
-          "text":"https://datarunsdeep.com.au/",
-          "validations" : []
+      		"action" : "click",
+      		"selector" : ".primary-menu__trigger",
+          "validations" : [
+            {
+              "tag" : "UA",
+              "type" : "exact",
+              "validators" :
+              [
+                "www.google-analytics.com",
+                "tid=UA-37174842",
+                "t=event",
+                "ec=Navigation",
+                "ea=Menu",
+                "el=State"
+              ]
+            },
+            {
+              "tag" : "facebook",
+              "type" : "exact",
+              "validators" :
+              [
+                "www.facebook.com",
+                "id=123456789"
+              ]
+            }
+          ]
       	},
         {
           "index" : "3",
           "action" : "click",
-          "selector" : ".btn.btn--filled.wd-start-debugging-button"
+          "selector" : ".primary-menu__close"
         },
         {
           "index" : "4",
-          "action" : "click",
-          "selector" : ".primary-menu__trigger",
-          "validations" : []
+          "action" : "end",
+          "selector" : "none"
         }
       ]
     },
